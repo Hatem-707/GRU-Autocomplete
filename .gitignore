@@ -1,0 +1,13 @@
+*.bin
+*.pt
+*.pth
+*.onnx
+*.parquet
+fastText/
+Edge-LSTM-Chatbot/
+daily_dialog/
+.cache/
+ligtning_logs/
+movie-corpus/
+clean_big.json
+processed_reddit.txt
