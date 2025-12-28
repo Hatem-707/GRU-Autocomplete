@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroText Autocomplete</title>
+    <style>
+        :root {
+            --primary: #173f5f; /* Teal/Blue from slides */
+            --secondary: #20639b;
+            --accent: #f6d55c;
+            --bg: #f4f7f6;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            width: 800px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 24px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .editor-box {
+            position: relative;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            outline: none;
+            font-family: 'Courier New', Courier, monospace;
+            transition: border-color 0.3s;
+            box-sizing: border-box; 
+        }
+
+        textarea:focus {
+            border-color: var(--secondary);
+        }
+
+        .suggestions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            min-height: 40px;
+        }
+
+        .chip {
+            background-color: var(--secondary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid transparent;
+        }
+
+        .chip:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .chip .prob {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 5px;
+        }
+
+        .loading {
+            font-size: 12px;
+            color: #888;
+            margin-left: 10px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>NeuroText Engine</h1>
+    <p>Start typing. If you stop in the middle of a word, we'll autocomplete it. If you hit space, we'll predict the next concept.</p>
+    
+    <div class="editor-box">
+        <textarea id="inputText" placeholder="Type something here... (e.g., 'how are you')"></textarea>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <span style="font-weight: bold; font-size: 14px; color: #666; margin-right: 10px;">Predictions:</span>
+        <div class="suggestions" id="suggestionBox">
+            <!-- Chips will appear here -->
+        </div>
+        <div class="loading" id="loader">Computing...</div>
+    </div>
+</div>
+
+<script>
+    const textarea = document.getElementById('inputText');
+    const suggestionBox = document.getElementById('suggestionBox');
+    const loader = document.getElementById('loader');
+    let debounceTimer;
+
+    textarea.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const text = textarea.value;
+        
+        // Show loading if text is not empty
+        if(text.trim().length > 0) {
+            loader.style.display = 'block';
+        } else {
+            suggestionBox.innerHTML = '';
+            return;
+        }
+
+        // Debounce API calls (wait 200ms after typing stops)
+        debounceTimer = setTimeout(() => {
+            fetchPredictions(text);
+        }, 200);
+    });
+
+    async function fetchPredictions(text) {
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+
+            const data = await response.json();
+            renderSuggestions(data.candidates, data.mode);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
+
+    function renderSuggestions(candidates, mode) {
+        suggestionBox.innerHTML = '';
+
+        if (candidates.length === 0) {
+            suggestionBox.innerHTML = '<span style="color:#999; font-size:14px; padding-top:10px;">No confident predictions...</span>';
+            return;
+        }
+
+        candidates.forEach(cand => {
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            // Show word and percentage confidence
+            const probPercent = (cand.prob * 100).toFixed(1) + '%';
+            chip.innerHTML = `${cand.word} <span class="prob">${probPercent}</span>`;
+            
+            chip.onclick = () => applySuggestion(cand.word, mode);
+            suggestionBox.appendChild(chip);
+        });
+    }
+
+    function applySuggestion(word, mode) {
+        let currentText = textarea.value;
+
+        if (mode === 'next_word') {
+            // Simply append the word
+            textarea.value = currentText + word + " ";
+        } else {
+            // Replace the partial word
+            // 1. Split by spaces
+            // 2. Remove the last partial chunk
+            // 3. Append the new word
+            const parts = currentText.split(' ');
+            parts.pop(); // Remove partial
+            
+            if (parts.length > 0) {
+                textarea.value = parts.join(' ') + " " + word + " ";
+            } else {
+                textarea.value = word + " ";
+            }
+        }
+
+        // Refocus and trigger prediction for the next word
+        textarea.focus();
+        fetchPredictions(textarea.value);
+    }
+</script>
+
+</body>
+</html>
