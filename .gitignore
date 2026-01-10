@@ -13,3 +13,4 @@ lightning_logs/
 movie-corpus/
 clean_big.json
 processed_reddit.txt
+raw_corpus.txt
