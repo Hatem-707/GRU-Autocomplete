@@ -2,7 +2,7 @@
 
 A high-performance text autocomplete system built with deep learning that predicts next words and completes partial words in real-time. The model uses a Stacked GRU (Gated Recurrent Unit) architecture with self-attention, trained on Reddit discussion data and Daily Dialogue dataset.
 
-## 🎯 Project Overview
+##  Project Overview
 
 This project implements an end-to-end text autocomplete pipeline:
 
@@ -23,7 +23,7 @@ This project implements an end-to-end text autocomplete pipeline:
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 GRU-Autocomplete/
@@ -59,7 +59,7 @@ GRU-Autocomplete/
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Model Architecture
 
@@ -105,7 +105,7 @@ VOCAB_SIZE = ~50k         # Total vocabulary size
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -161,7 +161,7 @@ This starts an interactive session where you can type sentence prefixes and get 
 
 ---
 
-## 📊 Usage Examples
+##  Usage Examples
 
 ### Web Application
 
@@ -196,7 +196,7 @@ candidates = get_predictions("hello", prefix="wor")
 
 ---
 
-## 🔧 Data Preprocessing Pipeline
+##  Data Preprocessing Pipeline
 
 ### Step 1: Data Collection & Parsing
 
@@ -240,7 +240,7 @@ FastText embeddings (300-dim) are pre-trained and saved:
 
 ---
 
-## 🤖 Training
+##  Training
 
 ### Full Training Pipeline
 
@@ -288,7 +288,7 @@ trainer.fit(model, train_dataloaders, val_dataloaders)
 
 ---
 
-## 📦 Model Export & Deployment
+##  Model Export & Deployment
 
 ### Exporting to ONNX
 
@@ -333,7 +333,7 @@ logits = outputs[0]  # Shape: [1, seq_len, vocab_size]
 
 ---
 
-## 🎨 Web Application Details
+##  Web Application Details
 
 ### Flask Backend (`my_app/app.py`)
 
@@ -405,7 +405,7 @@ logits = outputs[0]  # Shape: [1, seq_len, vocab_size]
 
 ---
 
-## 🔬 Technical Details
+##  Technical Details
 
 ### Special Tokens
 
@@ -441,7 +441,7 @@ This allows the model to focus on important tokens in the input sequence.
 
 ---
 
-## 🛠️ Advanced: Custom Training
+##  Advanced: Custom Training
 
 ### Prepare Your Own Data
 
@@ -481,7 +481,7 @@ This allows the model to focus on important tokens in the input sequence.
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### ONNX Import Errors
 
@@ -512,7 +512,7 @@ g++ -O3 -march=native -o segmenter segmenter.cpp -licu
 
 ---
 
-## 📝 References & Resources
+##  References & Resources
 
 - **PyTorch Lightning**: https://www.pytorchlightning.ai/
 - **ONNX**: https://onnx.ai/
@@ -522,28 +522,18 @@ g++ -O3 -march=native -o segmenter segmenter.cpp -licu
 
 ---
 
-## 📄 License
+##  License
 
 This project is open source. Feel free to use and modify for educational and commercial purposes.
 
 ---
 
-## 👤 Author
+##  Author
 
 Hatem-707
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Areas for improvement:
-- Support for other languages
-- Beam search decoding (instead of greedy)
-- Fine-tuning on domain-specific data
-- Mobile app deployment
-- Real-time streaming inference
-
----
 
 ## Changelog
 
