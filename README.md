@@ -18,8 +18,8 @@ This project implements an end-to-end text autocomplete pipeline:
   - **Next-word prediction**: Suggests the next word when space is pressed
   - **Mid-word completion**: Autocompletes partial words as the user types
 - **Probability-based Ranking**: Suggestions are ranked by confidence score
-- **Lightweight**: Pre-trained model is only ~5-10MB
-- **Low Latency**: Inference typically completes in <50ms
+- **Lightweight**: Pre-trained model is only ~53MB
+- **Low Latency**: Inference typically completes in <20ms on laptop cpu
 
 ---
 
