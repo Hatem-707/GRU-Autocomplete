@@ -90,7 +90,7 @@ DROPOUT = 0.3             # Dropout rate
 BATCH_SIZE = 512          # Training batch size
 LEARNING_RATE = 1e-3      # Adam optimizer learning rate
 MAX_LEN = 30              # Maximum sequence length
-VOCAB_SIZE = ~50k         # Total vocabulary size
+VOCAB_SIZE = 10k         # Total vocabulary size
 ```
 
 ### Training Details
