@@ -366,28 +366,42 @@ logits = outputs[0]  # Shape: [1, seq_len, vocab_size]
 
 ---
 
-## 📈 Performance Metrics
+### Inference Benchmark Results
+**Hardware:** AMD Ryzen 7 5800H (CPU) vs. NVIDIA RTX 3070 Laptop (GPU)
 
-### Inference Speed
+| Device | Batch Size | Latency (ms/batch) | Throughput (samp/s) |
+| :--- | :---: | :---: | :---: |
+| **CPU** (Ryzen 7 5800H) | 1 | 17.09 | 58.53 |
+| | 16 | 39.41 | 405.94 |
+| | 64 | 117.15 | 546.30 |
+| | 256 | 403.00 | 635.23 |
+| **GPU** (RTX 3070 Laptop) | 1 | **0.91** | 1,098.03 |
+| | 16 | 1.57 | 10,160.77 |
+| | 64 | 4.45 | 14,388.08 |
+| | 256 | 11.46 | **22,343.69** |
 
-| Platform | Batch Size | Seq Length | Latency |
-|----------|-----------|-----------|---------|
-| CPU (i7) | 1 | 10 | ~30ms |
-| CPU (i7) | 1 | 30 | ~45ms |
-| GPU (RTX 3060) | 32 | 30 | ~5ms |
+***
+
+### Key Takeaways
+*   **Speedup:** At a batch size of 256, the RTX 3070 is approximately **35x faster** than the Ryzen 7 5800H (22,343 vs 635 samples/sec).
+*   **Latency:** The GPU offers sub-millisecond latency for single items (0.91ms), making it excellent for real-time interactive usage.
+*   **Scaling:** The GPU throughput scales massively as batch size increases, whereas the CPU starts to plateau around batch size 64-256.
+
+![Throuput and latency plots](throughput_latency.png)
+*A graph showcasing the throughput and latency of the CPU and GPU used in testing*
 
 ### Model Accuracy
 
-- **Token-level Accuracy**: ~45-50% on held-out test set
+- **Token-level Accuracy**: ~28% on held-out test set of 2000 samples
   - *Note*: Autocomplete is inherently difficult; many valid next words exist
-- **Top-5 Accuracy**: ~70-75%
+- **Top-5 Accuracy**: ~54%
   - Suggests the correct next word in top-5 predictions
 
 ### Model Size
 
-- **PyTorch Model**: ~35MB (full state dict)
-- **ONNX Model**: ~8-10MB (optimized)
-- **Embeddings**: ~15MB (300-dim × 50k vocab)
+- **PyTorch Model**: ~146MB (full state dict)
+- **ONNX Model**: ~49MB (optimized)
+- **Embeddings**: ~5.3MB (300-dim × 10k vocab)
 
 ---
 
@@ -533,7 +547,7 @@ Contributions are welcome! Areas for improvement:
 
 ## Changelog
 
-### v1.0 (Current)
+### v0.1 (Current)
 - ✅ Stacked GRU with self-attention
 - ✅ ONNX export and inference
 - ✅ Flask web application
