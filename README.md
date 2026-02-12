@@ -227,7 +227,7 @@ cd training/
    ```
 
 2. **Vocabulary Construction**:
-   - Select top 50k most frequent words
+   - Select top 10k most frequent words
    - Add special tokens: `<PAD>`, `<UNK>`, `<EOS>`
    - Create word2id and id2word mappings (JSON)
 
@@ -466,8 +466,8 @@ This allows the model to focus on important tokens in the input sequence.
            words = line.split()
            word_freq.update(words)
    
-   # Keep top 50k words
-   vocab = {w: i+3 for i, (w, _) in enumerate(word_freq.most_common(50000))}
+   # Keep top 10k words
+   vocab = {w: i+3 for i, (w, _) in enumerate(word_freq.most_common(10000))}
    vocab['<PAD>'] = 0
    vocab['<UNK>'] = 1
    vocab['<EOS>'] = 2
@@ -521,36 +521,3 @@ g++ -O3 -march=native -o segmenter segmenter.cpp -licu
 - **ICU Library**: https://unicode-org.github.io/icu/
 
 ---
-
-##  License
-
-This project is open source. Feel free to use and modify for educational and commercial purposes.
-
----
-
-##  Author
-
-Hatem-707
-
----
-
-
-## Changelog
-
-### v0.1 (Current)
-- ✅ Stacked GRU with self-attention
-- ✅ ONNX export and inference
-- ✅ Flask web application
-- ✅ C++ preprocessing pipeline
-- ✅ Mid-word completion + next-word prediction
-
-### Future Improvements
-- [ ] Transformer-based architecture (BERT/GPT style)
-- [ ] Multi-language support
-- [ ] Mobile app (React Native)
-- [ ] Database caching for common completions
-- [ ] User-specific model fine-tuning
-
----
-
-**Last Updated**: January 2026
